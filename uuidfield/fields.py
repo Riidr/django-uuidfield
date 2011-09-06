@@ -1,4 +1,3 @@
-
 from django.db.models import Field
 
 import uuid
@@ -36,8 +35,17 @@ class UUIDField(Field):
             self.node, self.clock_seq = node, clock_seq
         elif version in (3, 5):
             self.namespace, self.name = namespace, name
-        super(UUIDField, self).__init__(*args, **kwargs)
-
+        super(UUIDField, self).__init__(*args, **kwargs
+        
+    def contribute_to_class(self, cls, name):
+        if self.primary_key == True: 
+            assert not cls._meta.has_auto_field, "A model can't have more than one AutoField: %s %s %s; have %s" % (self, cls, name, cls._meta.auto_field)
+            super(UUIDField, self).contribute_to_class(cls, name)
+            cls._meta.has_auto_field = True
+            cls._meta.auto_field = self
+        else:
+            super(UUIDField, self).contribute_to_class(cls, name)
+            
     def _create_uuid(self):
         if self.version == 1:
             args = (self.node, self.clock_seq)
