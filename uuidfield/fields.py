@@ -35,7 +35,7 @@ class UUIDField(Field):
             self.node, self.clock_seq = node, clock_seq
         elif version in (3, 5):
             self.namespace, self.name = namespace, name
-        super(UUIDField, self).__init__(*args, **kwargs
+        super(UUIDField, self).__init__(*args, **kwargs)
         
     def contribute_to_class(self, cls, name):
         if self.primary_key == True: 
